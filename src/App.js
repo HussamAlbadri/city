@@ -4,29 +4,50 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Form from 'react-bootstrap/Form'
+import Weather from './component/Weather';
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      locationResult: {},
-      Query: '',
+      locationResult: [],
+      searchForQuery: '',
       showLocation: false,
-      errorHandling: false
+      errorHandling: false,
+      weatherDataResult: []
     }
   }
 
-  getLocFun = async (e) => {
-        e.preventDefault();
+  getLocFun = async (event) => {
+    event.preventDefault();
         await this.setState({
-          Query: e.target.City.value
+          searchForQuery: event.target.City.value
         })
-    
+    //`http://localhost:3005/getweatherApi?city=${this.state.searchForQuery}`;
+  //  `${process.env.REACT_APP_SERVER_LINK}/getweatherApi?city=${this.state.searchForQuery}`;
+
         try{    
-        let reqUrl = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${this.state.searchQuery}&format=json`;
+        let reqwUrl = `http://localhost:3005/getweatherApi?city=${this.state.searchForQuery}`;
     
-        let locResult = await axios.get(reqUrl);
+        let aPIweatherData = await axios.get(reqwUrl);
+      
+        this.setState({
+          weatherDataResult: aPIweatherData.data,
+          showLocation: true,
+          errorHandling:false
+        })
+      } catch{
+        this.setState({
+          errorHandling:true,
+          showLocation: false
+        })
+      }
+
+      try{    
+        let locationurl = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${this.state.searchForQuery}&format=json`;
+    
+        let locResult = await axios.get(locationurl);
       
         console.log('asArray', locResult.data);
     
@@ -65,14 +86,20 @@ class App extends React.Component {
     {/* <Button variant="primary">Go somewhere</Button> */}
 
     <ListGroup variant="flush">
-    <ListGroup.Item> City: {this.state.Query}</ListGroup.Item>
+    <ListGroup.Item> City: {this.state.searchForQuery}</ListGroup.Item>
     <ListGroup.Item> Latitude: {this.state.locationResult.lat}</ListGroup.Item>
     <ListGroup.Item> Longitude: {this.state.locationResult.lon}</ListGroup.Item>
+
+    {this.state.weatherDataResult.map(info => {
+     return (
+      <ListGroup.Item>
+    <Weather  weatherDataResult={info} />
+  </ListGroup.Item>
+    )})} 
+
   </ListGroup>
   </Card.Body>
   
-       
-
       </Card>
       }
        
