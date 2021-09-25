@@ -5,6 +5,8 @@ import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Form from 'react-bootstrap/Form'
 import Weather from './component/Weather';
+import Movie from './component/Movie';
+
 
 class App extends React.Component {
 
@@ -15,7 +17,8 @@ class App extends React.Component {
       searchForQuery: '',
       showLocation: false,
       errorHandling: false,
-      weatherDataResult: []
+      weatherDataResult: [],
+      MovieData: []
     }
   }
 
@@ -43,7 +46,7 @@ class App extends React.Component {
           showLocation: false
         })
       }
-
+// Weather Data Section
       try{    
         let locationurl = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${this.state.searchForQuery}&format=json`;
     
@@ -64,8 +67,24 @@ class App extends React.Component {
           showLocation: false
         })
       }
-    
-      }
+// Movie Data Section
+try{
+  let movieDataLink = `https://city-explorer-app404.herokuapp.com/movies?city=${this.state.searchForQuery}`;
+
+  let dataApi = await axios.get(movieDataLink);
+
+  this.setState({
+    MovieData:dataApi.data,
+    showLocation: true,
+    errorHandling: false 
+  })
+} catch{
+  this.setState({
+    errorHandling: true,
+    showLocation: false
+  })
+}
+}
 
 
   render() {
@@ -96,6 +115,13 @@ class App extends React.Component {
     <Weather  weatherDataResult={info} />
   </ListGroup.Item>
     )})} 
+    {this.state.MovieData.map(info =>{
+      return(
+        <ListGroup.Item>
+          <Movie MovieData={info} />
+          </ListGroup.Item>
+      )
+    })}
 
   </ListGroup>
   </Card.Body>
