@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
+import Movie from './component/Movie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Form from 'react-bootstrap/Form'
 import Weather from './component/Weather';
-import Movie from './component/Movie';
 
 
 class App extends React.Component {
@@ -18,7 +18,7 @@ class App extends React.Component {
       showLocation: false,
       errorHandling: false,
       weatherDataResult: [],
-      MovieData: []
+      allMovieData: []
     }
   }
 
@@ -31,7 +31,7 @@ class App extends React.Component {
   //  `${process.env.REACT_APP_SERVER_LINK}/getweatherApi?city=${this.state.searchForQuery}`;
 
         try{    
-        let reqwUrl = `http://localhost:3005/getweatherApi?city=${this.state.searchForQuery}`;
+        let reqwUrl = `https://city-explorer-app404.herokuapp.com/getweatherApi?city=${this.state.searchForQuery}`;
     
         let aPIweatherData = await axios.get(reqwUrl);
       
@@ -50,12 +50,8 @@ class App extends React.Component {
       try{    
         let locationurl = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${this.state.searchForQuery}&format=json`;
     
-        let locResult = await axios.get(locationurl);
-      
-        console.log('asArray', locResult.data);
-    
-    
-    
+        let locResult = await axios.get(locationurl);    
+
         this.setState({
           locationResult: locResult.data[0],
           showLocation: true,
@@ -74,7 +70,7 @@ try{
   let dataApi = await axios.get(movieDataLink);
 
   this.setState({
-    MovieData:dataApi.data,
+    allMovieData:dataApi.data,
     showLocation: true,
     errorHandling: false 
   })
@@ -115,10 +111,10 @@ try{
     <Weather  weatherDataResult={info} />
   </ListGroup.Item>
     )})} 
-    {this.state.MovieData.map(info =>{
+    {this.state.allMovieData.map(ele =>{
       return(
         <ListGroup.Item>
-          <Movie MovieData={info} />
+          <Movie allMovieData={ele} />
           </ListGroup.Item>
       )
     })}
