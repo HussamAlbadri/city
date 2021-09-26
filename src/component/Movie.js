@@ -4,13 +4,13 @@ class Movie extends Component{
     render() {
         return(
             <div>
-                <p>Title: {this.props.movieCon.title}</p>
-                <p>Overview: {this.props.movieCon.over_view}</p>
-                <p>Number Of Votes: {this.props.movieCon.vote}</p>
-                <p>Total: {this.props.movieCon.numberOfTotalVotes}</p>
-                <img src={this.props.movieCon.image_path} alt={this.props.movieCon.title}/>
-                <p>Popularity: {this.props.movieCon.popularity}</p>
-                <p>Released In: {this.props.movieCon.release_date}</p>
+                <p>Title: {this.props.allMovieData.title}</p>
+                <p>Overview: {this.props.allMovieData.overview}</p>
+                <p>Number Of Votes: {this.props.allMovieData.average_votes}</p>
+                <p>Total: {this.props.allMovieData.total_votes}</p>
+                <img src={this.props.allMovieData.image_url} alt={this.props.allMovieData.title}/>
+                <p>Popularity: {this.props.allMovieData.popularity}</p>
+                <p>Released In: {this.props.allMovieData.released_on}</p>
             </div>
         )
     }
